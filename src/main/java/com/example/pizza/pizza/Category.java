@@ -1,5 +1,5 @@
 package com.example.pizza.pizza;
 
 public enum Category {
-    Meat, Vegetarian, Grille, Spicy
+    All, Meat, Vegetarian, Grille, Spicy
 }
