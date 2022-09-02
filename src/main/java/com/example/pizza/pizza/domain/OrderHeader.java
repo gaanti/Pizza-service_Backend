@@ -13,25 +13,8 @@ import java.util.List;
 @Setter
 public class OrderHeader extends Order{
 
-    @JSON
-    @Transient
-    private List<OrderedPizza> orderedPizzas;
+    /*@Transient
+    private List<OrderedPizzasRepository> orderedPizzas;*/
+    private int orderCost;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof OrderHeader)) return false;
-        if (!super.equals(o)) return false;
-
-        OrderHeader that = (OrderHeader) o;
-
-        return getOrderedPizzas() != null ? getOrderedPizzas().equals(that.getOrderedPizzas()) : that.getOrderedPizzas() == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (getOrderedPizzas() != null ? getOrderedPizzas().hashCode() : 0);
-        return result;
-    }
 }

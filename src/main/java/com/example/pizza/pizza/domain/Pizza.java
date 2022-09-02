@@ -12,6 +12,19 @@ import java.util.Arrays;
 @Setter
 @Transactional
 public class Pizza {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+    String title;
+    @Fetch(FetchMode.JOIN)
+    public byte[] image;
+    String doughType;
+    String size;
+    Integer price;
+    @ManyToOne
+    Categories categoryId;
+    Integer popularity;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -43,17 +56,4 @@ public class Pizza {
         result = 31 * result + (getPopularity() != null ? getPopularity().hashCode() : 0);
         return result;
     }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    String title;
-    @Fetch(FetchMode.JOIN)
-    public byte[] image;
-    String doughType;
-    String size;
-    Integer price;
-    @ManyToOne
-    Categories categoryId;
-    Integer popularity;
 }

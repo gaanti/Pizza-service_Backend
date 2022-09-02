@@ -28,6 +28,7 @@ public class DeliveryPizzaOrder extends Order {
     private Address address;
     private int deliveryCost;
     private String contactMethod;
+    private String customerName;
 
     @Override
     public boolean equals(Object o) {

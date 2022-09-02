@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -39,6 +40,9 @@ class PizzaApplicationTests {
 
     @Autowired
     OrderHeaderRepository orderHeaderRepository;
+
+    @Autowired
+    OrderedPizzasRepository orderedPizzasRepository;
 
     @Test
     @Transactional
@@ -76,20 +80,31 @@ class PizzaApplicationTests {
         SECOND__PIZZA.put("size", 30);
         SECOND__PIZZA.put("quantity", 3);
 
+        OrderHeader orderHeader = new OrderHeader();
+        orderHeader.setOrderCost(484848);
+        OrderHeader SAVED_orderHeader = orderHeaderRepository.saveAndFlush(orderHeader);
+
         ////////
-        OrderedPizza orderedPizza = new ObjectMapper().readValue(array.toString(), OrderedPizza.class);
-        OrderedPizza orderedPizza1 = new ObjectMapper().readValue(SECOND__PIZZA.toString(), OrderedPizza.class);
-        List<OrderedPizza> orderedPizzaSet = new ArrayList<>();
-        orderedPizzaSet.add(orderedPizza);
-        orderedPizzaSet.add(orderedPizza1);
+        OrderedPizzas orderedPizzas = new ObjectMapper().readValue(array.toString(), OrderedPizzas.class);
+        OrderedPizzas orderedPizzas1 = new ObjectMapper().readValue(SECOND__PIZZA.toString(), OrderedPizzas.class);
+        orderedPizzas.setOrderHeader(SAVED_orderHeader);
+        orderedPizzas1.setOrderHeader(SAVED_orderHeader);
+
+        List<OrderedPizzas> orderedPizzasSet = new ArrayList<>();
+        orderedPizzasSet.add(orderedPizzas);
+        orderedPizzasSet.add(orderedPizzas1);
+        orderedPizzasRepository.saveAll(orderedPizzasSet);
+        Set<OrderedPizzas> BLALVLA= orderedPizzasRepository.findAllByOrderHeader(orderHeaderRepository.getReferenceById(1L));
+        Set<OrderedPizzas> BLALVLAA= orderedPizzasRepository.findAllByTitle("Anton's Test");
         ////////
 
-        OrderHeader orderHeader = new OrderHeader();
-        orderHeader.setOrderedPizzas(orderedPizzaSet);
-        OrderHeader SAVED_orderHeader = orderHeaderRepository.saveAndFlush(orderHeader);
 
         DeliveryPizzaOrder deliveryPizzaOrder = new DeliveryPizzaOrder();
         deliveryPizzaOrder.setOrderHeader(SAVED_orderHeader);
+        deliveryPizzaOrder.setCustomerName("Lida");
+        deliveryPizzaOrder.setAddress(new Address("Vakhnyanina 3", "Striy"));
+        deliveryPizzaOrder.setDeliveryCost(48);
+        deliveryPizzaOrder.setContactMethod("By phone");
 
         DeliveryPizzaOrder deliveryPizzaOrder_SAVED =
                 deliveryPizzaOrderRepository.saveAndFlush(deliveryPizzaOrder);
