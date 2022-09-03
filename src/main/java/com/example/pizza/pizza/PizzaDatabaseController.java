@@ -4,9 +4,21 @@ import com.example.pizza.pizza.Repositories.CategoriesRepository;
 import com.example.pizza.pizza.Repositories.PizzaRepository;
 import com.example.pizza.pizza.domain.Categories;
 import com.example.pizza.pizza.domain.Pizza;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.google.gson.Gson;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.web.bind.annotation.*;
+
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -18,44 +30,57 @@ public class PizzaDatabaseController {
     @Autowired
     CategoriesRepository categoriesRepository;
 
+    ObjectMapper objectMapper = new ObjectMapper();
+
     @GetMapping
-    Page<Pizza> getAllPizzas(@RequestParam(required = false, name = "sortBy", defaultValue = "popularity") String sortBy,
-                             @RequestParam(required = false, name = "filterByCategoryId", defaultValue = "1") Long filterByCategory,
+    String getAllPizzas(@RequestParam(required = false, name = "sortBy", defaultValue = "popularity") String sortBy,
+                             @RequestParam(required = false, name = "filterByCategoryId", defaultValue = "0") Long filterByCategory,
                              @RequestParam(required = false, name = "currentPage", defaultValue = "0") int currentPage,
-                             @RequestParam(required = false, name = "filterByTitle", defaultValue = "") String filterByTitle) {
+                             @RequestParam(required = false, name = "filterByTitle", defaultValue = "") String filterByTitle) throws JsonProcessingException {
 
 
         int totalPagesQty = 0;
         Pageable pageable1 = PageRequest.of(currentPage, 8, Sort.by(sortBy).descending());
 
-        Categories categoryId =
-                categoriesRepository.getById(filterByCategory);
-        //categoriesRepository.findById(Long.valueOf(filterByCategory));
-        //Categories categoryId = new Categories();
+        Optional<Categories> categoryId = categoriesRepository.findById(filterByCategory);
 
-        if (filterByCategory.equals(0L)) filterByCategory = null;
+        @Setter
+        @Getter
+        @AllArgsConstructor
+        @NoArgsConstructor
+        class POPO {
+            Page<Pizza> pizzas;
+            List<Categories> categories;
+        }
+
+        if(filterByCategory.equals(0L)) {
+            filterByCategory = null;
+        } else if (categoryId.isPresent()) {
+            filterByCategory = categoryId.get().getId();
+        }
+
         if (filterByTitle.equals("")) filterByTitle = null;
 
         if (filterByCategory != null && filterByTitle != null) {
-            totalPagesQty = pizzaRepository.findByTitleContainsIgnoreCaseAndCategoryId(filterByTitle, categoryId.getId(), pageable1).getTotalPages();
+            totalPagesQty = pizzaRepository.findByTitleContainsIgnoreCaseAndCategoryId(filterByTitle, filterByCategory, pageable1).getTotalPages();
             if (currentPage + 1 > totalPagesQty) {
                 pageable1 = PageRequest.of(totalPagesQty - 1, 8, Sort.by(sortBy).descending());
             }
-            return pizzaRepository.findByTitleContainsIgnoreCaseAndCategoryId(filterByTitle, categoryId.getId(), pageable1);
+            return objectMapper.writeValueAsString(new POPO (pizzaRepository.findByTitleContainsIgnoreCaseAndCategoryId(filterByTitle, filterByCategory, pageable1), categoriesRepository.findAll()));
         } else if (filterByCategory != null) {
-            totalPagesQty = pizzaRepository.findAllByCategoryId(filterByCategory, pageable1).getTotalPages();
+            totalPagesQty = pizzaRepository.findByCategory(categoriesRepository.findById(filterByCategory), pageable1).getTotalPages();
             if (currentPage + 1 > totalPagesQty) {
                 pageable1 = PageRequest.of(totalPagesQty - 1, 8, Sort.by(sortBy).descending());
             }
-            return pizzaRepository.findAllByCategoryId(filterByCategory, pageable1);
+            return objectMapper.writeValueAsString(new POPO (pizzaRepository.findByCategory(categoriesRepository.findById(filterByCategory).get(), pageable1), categoriesRepository.findAll()));
         } else if (filterByTitle != null) {
             totalPagesQty = pizzaRepository.findAllByTitleContainsIgnoreCase(filterByTitle, pageable1).getTotalPages();
             if (currentPage + 1 > totalPagesQty) {
                 pageable1 = PageRequest.of(totalPagesQty - 1, 8, Sort.by(sortBy).descending());
             }
-            return pizzaRepository.findAllByTitleContainsIgnoreCase(filterByTitle, pageable1);
+            return objectMapper.writeValueAsString(new POPO (pizzaRepository.findAllByTitleContainsIgnoreCase(filterByTitle, pageable1), categoriesRepository.findAll()));
         } else {
-            return pizzaRepository.findAll(pageable1);
+            return objectMapper.writeValueAsString(new POPO (pizzaRepository.findAll(pageable1), categoriesRepository.findAll()));
         }
     }
 }

@@ -11,10 +11,9 @@ import java.sql.Date;
 @Getter
 @Setter
 public class PickUpPizzaOrder extends Order {
-    private Date pickUpTime;
+    private Date pickupTime;
     @OneToOne
     private OrderHeader orderHeader;
-    private int orderCost;
     private String customerName;
 
     @Override
@@ -24,17 +23,15 @@ public class PickUpPizzaOrder extends Order {
 
         PickUpPizzaOrder that = (PickUpPizzaOrder) o;
 
-        if (getOrderCost() != that.getOrderCost()) return false;
-        if (!getPickUpTime().equals(that.getPickUpTime())) return false;
+        if (!getPickupTime().equals(that.getPickupTime())) return false;
         if (!getOrderHeader().equals(that.getOrderHeader())) return false;
         return getCustomerName() != null ? getCustomerName().equals(that.getCustomerName()) : that.getCustomerName() == null;
     }
 
     @Override
     public int hashCode() {
-        int result = getPickUpTime().hashCode();
+        int result = getPickupTime().hashCode();
         result = 31 * result + getOrderHeader().hashCode();
-        result = 31 * result + getOrderCost();
         result = 31 * result + (getCustomerName() != null ? getCustomerName().hashCode() : 0);
         return result;
     }
