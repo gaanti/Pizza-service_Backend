@@ -1,35 +1,39 @@
 package com.example.pizza.pizza.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
-public class Categories {
+@Setter
+public class Ingredients {
 	@Id
 	private Long id;
-	private String categoryTitle;
+	private String ingredientName;
 	@ManyToMany
-	@JoinTable (name = "pizza_category",
-			joinColumns = @JoinColumn (name = "category_id"),
-			inverseJoinColumns = @JoinColumn (name = "pizza_id"))
+	@JoinTable(name = "pizza_ingredient",
+			joinColumns = @JoinColumn(name = "pizza_id"),
+			inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
 	@JsonIgnore
 	private Set<Pizzas> pizzas;
 
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		if (!(o instanceof Categories)) return false;
+		if (!(o instanceof Ingredients)) return false;
 
-		Categories that = (Categories) o;
+		Ingredients that = (Ingredients) o;
 
 		if (getId() != null ? !getId().equals(that.getId()) : that.getId() != null) return false;
-		if (getCategoryTitle() != null ? !getCategoryTitle().equals(that.getCategoryTitle()) : that.getCategoryTitle() != null)
+		if (getIngredientName() != null ? !getIngredientName().equals(that.getIngredientName()) : that.getIngredientName() != null)
 			return false;
 		return getPizzas() != null ? getPizzas().equals(that.getPizzas()) : that.getPizzas() == null;
 	}
@@ -37,7 +41,7 @@ public class Categories {
 	@Override
 	public int hashCode() {
 		int result = getId() != null ? getId().hashCode() : 0;
-		result = 31 * result + (getCategoryTitle() != null ? getCategoryTitle().hashCode() : 0);
+		result = 31 * result + (getIngredientName() != null ? getIngredientName().hashCode() : 0);
 		return result;
 	}
 }
