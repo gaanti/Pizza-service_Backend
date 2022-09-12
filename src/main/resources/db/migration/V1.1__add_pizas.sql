@@ -51,7 +51,7 @@ insert into pizzas (title,
                     price,
                     popularity)
 values ('Super Meaty',
-        LOAD_FILE('/Users/juliagaskevich/mysql-toSHARE/pizzas/Meaty_BBQ.jpg'),
+        LOAD_FILE('/Users/juliagaskevich/mysql-toSHARE/pizzas/Super_Meaty.jpg'),
         33.99,
         5);
 insert into pizzas (title,
