@@ -102,4 +102,9 @@ public class PizzaDatabaseController {
 			return objectMapper.writeValueAsString(new SERVER_RESPONSE(pizzaRepository.findAll(pageable1), categoriesRepository.findAll(), doughWidthRepository.findAll(), doughRadiusRepository.findAll(), ingredientRepository.findAll()));
 		}
 	}
+
+	@GetMapping("/get-info")
+	String getInfo(){
+		return "I'm working";
+	}
 }
