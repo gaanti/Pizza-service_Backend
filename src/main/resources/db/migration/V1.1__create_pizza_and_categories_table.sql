@@ -12,6 +12,6 @@ create table pizzas
     title         varchar(50),
     image         mediumblob,
     price         float,
-    popularity    int(2),
+    popularity    int,
     primary key (id)
 );
