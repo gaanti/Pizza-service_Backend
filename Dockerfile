@@ -8,6 +8,7 @@ COPY src src
 RUN --mount=type=cache,target=~/.m2 ./mvnw -B clean package -Dparallel=all -DperCoreThreadCount=false -DthreadCount=4
 
 FROM openjdk:18-slim
+COPY public public
 COPY --from=dep target/*.jar app.jar
 EXPOSE 5000
 ENTRYPOINT ["java","-jar","app.jar"]
