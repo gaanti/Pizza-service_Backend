@@ -3,13 +3,11 @@ FROM openjdk:18 as dep
 COPY .mvn .mvn
 COPY mvnw .
 COPY pom.xml .
-RUN --mount=type=cache,target=~/.m2 ./mvnw -B dependency:go-offline
+RUN ./mvnw -B dependency:go-offline
 COPY src src
-RUN --mount=type=cache,target=~/.m2 ./mvnw -B clean package -Dparallel=all -DperCoreThreadCount=false -DthreadCount=4
+RUN ./mvnw -B clean package
 
-FROM openjdk:18
-
-COPY public /public
+FROM openjdk:18-slim
 
 COPY --from=dep target/*.jar app.jar
 EXPOSE 5000
