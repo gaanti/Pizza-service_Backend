@@ -14,7 +14,7 @@ import java.util.*;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-@RequestMapping("/pizzas")
+@RequestMapping("/api")
 public class PizzaDatabaseController {
 	@Autowired
 	PizzaRepository pizzaRepository;
