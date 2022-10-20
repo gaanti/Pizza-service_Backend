@@ -1,7 +1,7 @@
 create table order_header
 (
     id             bigint not null auto_increment,
-    creation_time   timestamp,
+    creation_time  timestamp,
 
     order_cost     float,
     contact_person varchar(60),
@@ -13,7 +13,7 @@ create table order_header
 create table order_lines
 (
     id              bigint not null auto_increment,
-    creation_time    timestamp,
+    creation_time   timestamp,
 
     order_header_id bigint,
     pizza_id        bigint,
@@ -30,7 +30,7 @@ create table order_lines
 create table pickup_order
 (
     id              bigint not null auto_increment,
-    creation_time    datetime,
+    creation_time   datetime,
     order_header_id bigint,
 
     pickup_time     time,
@@ -42,7 +42,7 @@ create table pickup_order
 create table delivery_order
 (
     id                      bigint not null auto_increment,
-    creation_time            datetime,
+    creation_time           datetime,
     order_header_id         bigint,
 
     delivery_address_street varchar(50),

@@ -1,11 +1,9 @@
 package com.example.pizza.pizza.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
 import lombok.Getter;
 
 import javax.persistence.*;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -15,9 +13,9 @@ public class Categories {
 	private Long id;
 	private String categoryTitle;
 	@ManyToMany
-	@JoinTable (name = "pizza_category",
-			joinColumns = @JoinColumn (name = "category_id"),
-			inverseJoinColumns = @JoinColumn (name = "pizza_id"))
+	@JoinTable(name = "pizza_category",
+			joinColumns = @JoinColumn(name = "category_id"),
+			inverseJoinColumns = @JoinColumn(name = "pizza_id"))
 	@JsonIgnore
 	private Set<Pizzas> pizzas;
 

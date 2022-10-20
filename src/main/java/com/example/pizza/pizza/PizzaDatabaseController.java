@@ -4,13 +4,19 @@ import com.example.pizza.pizza.Repositories.*;
 import com.example.pizza.pizza.domain.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
-
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -41,7 +47,7 @@ public class PizzaDatabaseController {
 	}
 
 	private Sort.Direction getSortDirection(String sortDirection) {
-		if (sortDirection.equalsIgnoreCase("decrease")){
+		if (sortDirection.equalsIgnoreCase("decrease")) {
 			return Sort.Direction.ASC;
 
 		} else {
@@ -58,13 +64,13 @@ public class PizzaDatabaseController {
 						@RequestParam(required = false, name = "filterByTitle") String filterByTitle) throws JsonProcessingException {
 
 		if (filterByCategory != null) {
-			if (filterByCategory == 0){
+			if (filterByCategory == 0) {
 				filterByCategory = null;
 			}
 		}
 		int totalPagesQty;
-		Sort.Direction  sortDirection1 = getSortDirection(sortDirection);
-		Pageable pageable1 = PageRequest.of(currentPage, 8, Sort.by(sortDirection1,sortBy));
+		Sort.Direction sortDirection1 = getSortDirection(sortDirection);
+		Pageable pageable1 = PageRequest.of(currentPage, 8, Sort.by(sortDirection1, sortBy));
 
 		@Setter
 		@Getter
@@ -77,7 +83,7 @@ public class PizzaDatabaseController {
 			List<DoughRadius> doughRadius;
 			List<Ingredients> ingredients;
 		}
-		if (filterByCategory != null){
+		if (filterByCategory != null) {
 			Categories ctg = popo(filterByCategory);
 			if (ctg != null && filterByTitle != null) {
 				totalPagesQty = pizzaRepository.findByTitleContainsIgnoreCaseAndCategoryId(filterByTitle, ctg.getId(), pageable1).getTotalPages();
@@ -88,14 +94,14 @@ public class PizzaDatabaseController {
 			} else {
 				totalPagesQty = pizzaRepository.findAllByCategoryId(ctg.getId(), pageable1).getTotalPages();
 				if (currentPage + 1 > totalPagesQty && totalPagesQty > 0) {
-					pageable1 = PageRequest.of(totalPagesQty - 1, 8, Sort.by(sortDirection1,sortBy));
+					pageable1 = PageRequest.of(totalPagesQty - 1, 8, Sort.by(sortDirection1, sortBy));
 				}
 				return objectMapper.writeValueAsString(new SERVER_RESPONSE(pizzaRepository.findAllByCategoryId(ctg.getId(), pageable1), categoriesRepository.findAll(), doughWidthRepository.findAll(), doughRadiusRepository.findAll(), ingredientRepository.findAll()));
 			}
 		} else if (filterByTitle != null) {
 			totalPagesQty = pizzaRepository.findAllByTitleContainsIgnoreCase(filterByTitle, pageable1).getTotalPages();
 			if (currentPage + 1 > totalPagesQty && totalPagesQty > 0) {
-				pageable1 = PageRequest.of(totalPagesQty - 1, 8, Sort.by(sortDirection1,sortBy));
+				pageable1 = PageRequest.of(totalPagesQty - 1, 8, Sort.by(sortDirection1, sortBy));
 			}
 			return objectMapper.writeValueAsString(new SERVER_RESPONSE(pizzaRepository.findAllByTitleContainsIgnoreCase(filterByTitle, pageable1), categoriesRepository.findAll(), doughWidthRepository.findAll(), doughRadiusRepository.findAll(), ingredientRepository.findAll()));
 		} else {
@@ -104,7 +110,7 @@ public class PizzaDatabaseController {
 	}
 
 	@GetMapping("/get-info")
-	String getInfo(){
+	String getInfo() {
 		return "I'm working";
 	}
 }

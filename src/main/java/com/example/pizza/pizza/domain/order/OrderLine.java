@@ -8,11 +8,11 @@ import javax.persistence.*;
 @Data
 @Entity
 public class OrderLine extends BaseEntity {
-    @OneToOne(cascade = CascadeType.ALL)
-    private OrderedPizza orderedPizza;
+	@OneToOne(cascade = CascadeType.ALL)
+	private OrderedPizza orderedPizza;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "order_header_id")
-    private OrderHeader orderHeader;
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "order_header_id")
+	private OrderHeader orderHeader;
 
 }

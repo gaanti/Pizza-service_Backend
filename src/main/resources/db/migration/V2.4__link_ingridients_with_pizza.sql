@@ -58,7 +58,6 @@ where p.title = 'Veggie Overload'
 
 
 
-
 insert into pizza_ingredient (pizza_id, ingredient_id)
 select p.id, i.id
 from pizzas p,
@@ -79,7 +78,6 @@ from pizzas p,
      ingredients i
 where p.title = 'Hawaiian'
   and i.ingredient_name = 'Spicy mango sauce';
-
 
 
 
@@ -106,8 +104,6 @@ where p.title = 'Sweet Chili Chicken'
 
 
 
-
-
 insert into pizza_ingredient (pizza_id, ingredient_id)
 select p.id, i.id
 from pizzas p,
@@ -121,8 +117,6 @@ from pizzas p,
      ingredients i
 where p.title = 'Cheesy Chicken'
   and i.ingredient_name = 'Pepper';
-
-
 
 
 
@@ -153,7 +147,6 @@ from pizzas p,
      ingredients i
 where p.title = 'Beef Suya'
   and i.ingredient_name = 'Pepper';
-
 
 
 
@@ -246,9 +239,6 @@ where p.title = 'Margherita'
 
 
 
-
-
-
 insert into pizza_ingredient (pizza_id, ingredient_id)
 select p.id, i.id
 from pizzas p,
@@ -309,7 +299,6 @@ from pizzas p,
      ingredients i
 where p.title = 'Chicken BBQ'
   and i.ingredient_name = 'Chicken';
-
 
 
 

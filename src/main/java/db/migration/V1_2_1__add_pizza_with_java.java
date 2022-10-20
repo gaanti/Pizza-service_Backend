@@ -66,7 +66,7 @@ public class V1_2_1__add_pizza_with_java extends BaseJavaMigration {
 		preparedStatement.setString(1, "Super Meaty");
 		image = new ClassPathResource("pizzas/Super_Meaty.jpg").getInputStream();
 		preparedStatement.setBlob(2, image);
-		preparedStatement.setFloat(3,  33.99f);
+		preparedStatement.setFloat(3, 33.99f);
 		preparedStatement.setInt(4, 5);
 		preparedStatement.execute();
 

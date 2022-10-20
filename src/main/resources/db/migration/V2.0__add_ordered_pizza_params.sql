@@ -12,7 +12,7 @@ VALUES (45);
 
 create table dough_width
 (
-    id        bigint not null auto_increment,
+    id                bigint not null auto_increment,
     dough_width_title varchar(30),
     primary key (id)
 );

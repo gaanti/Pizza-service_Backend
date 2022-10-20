@@ -7,7 +7,7 @@ create table categories
 
 create table pizzas
 (
-    id            bigint not null auto_increment,
+    id            bigint    not null auto_increment,
     creation_time timestamp not null default now(),
     title         varchar(50),
     image         mediumblob,
