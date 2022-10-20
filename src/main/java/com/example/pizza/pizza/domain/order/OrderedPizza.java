@@ -4,7 +4,10 @@ import com.example.pizza.pizza.domain.BaseEntity;
 import com.example.pizza.pizza.domain.DoughRadius;
 import com.example.pizza.pizza.domain.DoughWidth;
 import com.example.pizza.pizza.domain.Pizzas;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -19,7 +22,7 @@ import javax.persistence.OneToOne;
 @NoArgsConstructor
 public class OrderedPizza extends BaseEntity {
 	@ManyToOne
-	@JoinColumn(name = "pizza_id", referencedColumnName="id")
+	@JoinColumn(name = "pizza_id", referencedColumnName = "id")
 	private Pizzas pizza;
 	@OneToOne
 	private DoughWidth doughWidth;

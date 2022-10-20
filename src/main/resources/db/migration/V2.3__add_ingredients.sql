@@ -1,8 +1,8 @@
 create table ingredients
 (
-    id               bigint      not null auto_increment,
-    creation_time    timestamp   not null default now(),
-    ingredient_name  varchar(30) not null,
+    id              bigint      not null auto_increment,
+    creation_time   timestamp   not null default now(),
+    ingredient_name varchar(30) not null,
 
     PRIMARY KEY (id)
 );

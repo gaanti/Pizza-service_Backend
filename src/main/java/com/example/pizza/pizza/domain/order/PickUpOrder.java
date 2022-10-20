@@ -10,9 +10,9 @@ import java.sql.Date;
 @Entity
 @Data
 public class PickUpOrder extends BaseEntity {
-    @OneToOne
-    private OrderHeader orderHeader;
-    private String customerName;
+	@OneToOne
+	private OrderHeader orderHeader;
+	private String customerName;
 
-    private Date pickupTime;
+	private Date pickupTime;
 }

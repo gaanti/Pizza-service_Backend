@@ -10,11 +10,10 @@ import lombok.Setter;
 @EqualsAndHashCode
 @NoArgsConstructor
 public class Address {
-	public Address (String street, String city) {
+	String street;
+	private String city;
+	public Address(String street, String city) {
 		this.street = street;
 		this.city = city;
 	}
-
-	String street;
-	private String city;
 }
