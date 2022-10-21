@@ -1,5 +1,8 @@
 package com.example.pizza.pizza.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -20,6 +23,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Pizzas {
 	public byte[] image;
 	String title;
@@ -44,6 +48,9 @@ public class Pizzas {
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 	private LocalDateTime creationTime;
+	@JsonProperty("quantity")
+	@Transient
+	private int quantity;
 
 	@Override
 	public boolean equals(Object o) {

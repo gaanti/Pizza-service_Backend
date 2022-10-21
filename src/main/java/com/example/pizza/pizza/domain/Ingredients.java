@@ -25,6 +25,10 @@ public class Ingredients {
 	@JsonIgnore
 	private Set<Pizzas> pizzas;
 
+	public Ingredients(String ingredientName) {
+		this.ingredientName = ingredientName;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
