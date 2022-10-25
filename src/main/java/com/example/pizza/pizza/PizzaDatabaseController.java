@@ -1,7 +1,11 @@
 package com.example.pizza.pizza;
 
-import com.example.pizza.pizza.Repositories.*;
-import com.example.pizza.pizza.domain.*;
+import com.example.pizza.pizza.Repositories.PizzaRepository;
+import com.example.pizza.pizza.Repositories.pizzaParams.CategoriesRepository;
+import com.example.pizza.pizza.Repositories.pizzaParams.DoughRadiusRepository;
+import com.example.pizza.pizza.Repositories.pizzaParams.DoughWidthRepository;
+import com.example.pizza.pizza.Repositories.pizzaParams.IngredientRepository;
+import com.example.pizza.pizza.domain.pizza.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package com.example.pizza.pizza.domain;
+package com.example.pizza.pizza.domain.pizza;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;

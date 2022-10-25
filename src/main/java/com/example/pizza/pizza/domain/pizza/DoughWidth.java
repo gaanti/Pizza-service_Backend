@@ -1,4 +1,4 @@
-package com.example.pizza.pizza.domain;
+package com.example.pizza.pizza.domain.pizza;
 
 import lombok.Getter;
 import lombok.Setter;

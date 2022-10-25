@@ -1,4 +1,4 @@
-create table ordered_pizzas
+create table ordered_pizza
 (
     id            bigint not null auto_increment,
     creation_time timestamp,
