@@ -47,11 +47,11 @@ public class PaymentsController {
 			Optional<Pizzas> optionalPizzaFromDB = pizzaRepository.findById(pizza.getPizza_id());
 			if (optionalPizzaFromDB.isPresent()) {
 				Pizzas pizzaFromDB = optionalPizzaFromDB.get();
-				Set<Ingredients> pizzaIngredients = pizza.getIngredients();
+				Set<String> pizzaIngredients = pizza.getIngredients();
 				String ingredientsStringList =
 						pizzaIngredients
 								.stream()
-								.map(ingredients -> ingredients.getIngredientName().toLowerCase())
+								.map(String::toLowerCase)
 								.reduce("", (result, ingredient) -> result + " " + ingredient);
 
 

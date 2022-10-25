@@ -24,8 +24,10 @@ public class OrderedPizza extends BaseEntity {
 	private int doughRadius;
 	private int quantity;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-	private Set<Ingredients> ingredients = new HashSet<>();
+	@ElementCollection // 1
+	@CollectionTable(name = "ordered_pizza_ingredients", joinColumns = @JoinColumn(name = "ordered_pizza_id")) // 2
+	@Column(name = "ingredient") // 3
+	private Set<String> ingredients = new HashSet<>();
 }
 
 /*@Entity
