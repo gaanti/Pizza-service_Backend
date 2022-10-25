@@ -42,55 +42,23 @@ public class PaymentsController {
 	OrderRepository orderRepository;
 	@Autowired
 	PizzaRepository pizzaRepository;
-
-	/*@RequestMapping("/order-fulfilled")
-	public ResponseEntity<String> odrderFulFilled(@RequestBody Object data) throws Exception {
-		String paymentId = (String) ((Map) data).get("id");
-		String paymentStatus = (String) ((Map) data).get("type");
-		//type -> charge.suc
-		//type -> payment_intent.created
-
-		try {
-			event = ApiResource.GSON.fromJson(payload, Event.class);
-		} catch (JsonSyntaxException e) {
-			// Invalid payload
-			System.out.println("⚠️  Webhook error while parsing basic request.");
-			response.status(400);
-			return "";
-		}
-
-
-		System.out.println("Got payload: " + paymentId);
-		List<OrderHeader> allHeaders = orderRepository.findAll();
-		OrderHeader foundOrderHeader = orderRepository.findByPaymentId(paymentId);
-		foundOrderHeader.setStatus(ORDER_STATUS.FULFILLED);
-		OrderHeader savedOrderHeader = orderRepository.save(foundOrderHeader);
-		System.out.println("Successfully changed order: " + savedOrderHeader.getId() + "\n" + "Current status: " + savedOrderHeader.getStatus());
-		return new ResponseEntity<>(paymentId, HttpStatus.OK);
-	}*/
-	@RequestMapping("/order-fulfilled")
-	public ResponseEntity<String> odrderFulFilled(@RequestBody String data) throws Exception {
-		Stripe.apiKey = "sk_test_51Luj1gE3rpIhISk0ZfABsQsLQrwic0zUvYJu7dGBzwEdStyqPqeX3uLJw8TIOk9ELCV8HmibLydyCkKgAz422Tsk00prapWWEe";
-		Event event = null;
-		try {
-			event = ApiResource.GSON.fromJson(data, Event.class);
-		} catch (JsonSyntaxException e) {
-			System.out.println("⚠️  Webhook error while parsing basic request.");
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-		if (Objects.equals(event.getType(), "checkout.session.completed")) {
-			Event eventWithRightId = Event.retrieve(event.getId());
-			Object JSON_WithRightId = ((eventWithRightId.getDataObjectDeserializer().getRawJson()));
-			String Stringified_JSON_WithRightId = JSON_WithRightId.toString();
-			String RightId = new ObjectMapper().readValue(Stringified_JSON_WithRightId, Map.class).get("id").toString();
-			OrderHeader foundOrderHeader = orderRepository.findByPaymentId(RightId);
-			foundOrderHeader.setStatus(ORDER_STATUS.FULFILLED);
-			OrderHeader savedOrderHeader = orderRepository.save(foundOrderHeader);
-			return new ResponseEntity<>(event.getId(), HttpStatus.OK);
-		}
-		return null;
+	@Getter
+	@Setter
+	@ToString
+	static class OrderPickUpPizza {
+		String contactPerson;
+		String notifyField;
+		String notifyMethod;
+		String timeToBeDone;
+		OrderedPizza[] pizzas;
 	}
 
+	@Getter
+	@Setter
+	@ToString
+	static class OrderDeliveryPizza extends OrderPickUpPizza {
+		Address deliveryAddress;
+	}
 
 	public List<SessionCreateParams.LineItem> fillOrderWithItems(OrderPickUpPizza data) {
 		List<SessionCreateParams.LineItem> orderedPizzas = new ArrayList<>();
@@ -190,21 +158,26 @@ public class PaymentsController {
 		return ResponseEntity.ok().header("Content-Type", "application/json").body(session.getUrl());
 	}
 
-	@Getter
-	@Setter
-	@ToString
-	static class OrderPickUpPizza {
-		String contactPerson;
-		String notifyField;
-		String notifyMethod;
-		String timeToBeDone;
-		OrderedPizza[] pizzas;
-	}
-
-	@Getter
-	@Setter
-	@ToString
-	static class OrderDeliveryPizza extends OrderPickUpPizza {
-		Address deliveryAddress;
+	@RequestMapping("/order-fulfilled")
+	public ResponseEntity<String> odrderFulFilled(@RequestBody String data) throws Exception {
+		Stripe.apiKey = "sk_test_51Luj1gE3rpIhISk0ZfABsQsLQrwic0zUvYJu7dGBzwEdStyqPqeX3uLJw8TIOk9ELCV8HmibLydyCkKgAz422Tsk00prapWWEe";
+		Event event = null;
+		try {
+			event = ApiResource.GSON.fromJson(data, Event.class);
+		} catch (JsonSyntaxException e) {
+			System.out.println("⚠️  Webhook error while parsing basic request.");
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		if (Objects.equals(event.getType(), "checkout.session.completed")) {
+			Event eventWithRightId = Event.retrieve(event.getId());
+			Object JSON_WithRightId = ((eventWithRightId.getDataObjectDeserializer().getRawJson()));
+			String Stringified_JSON_WithRightId = JSON_WithRightId.toString();
+			String RightId = new ObjectMapper().readValue(Stringified_JSON_WithRightId, Map.class).get("id").toString();
+			OrderHeader foundOrderHeader = orderRepository.findByPaymentId(RightId);
+			foundOrderHeader.setStatus(ORDER_STATUS.FULFILLED);
+			OrderHeader savedOrderHeader = orderRepository.save(foundOrderHeader);
+			return new ResponseEntity<>(event.getId(), HttpStatus.OK);
+		}
+		return null;
 	}
 }
