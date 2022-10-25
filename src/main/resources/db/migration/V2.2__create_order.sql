@@ -24,6 +24,8 @@ create table pick_up_order
     notify_method varchar(55),
     notify_field varchar(55),
     time_to_be_done varchar(55),
+    status ENUM ('FULFILLED','CREATED') default 'CREATED',
+    payment_id text,
 
     PRIMARY KEY (id)
 );
@@ -39,6 +41,8 @@ create table delivery_order
     notify_method varchar(55),
     notify_field varchar(55),
     time_to_be_done varchar(55),
+    status ENUM ('FULFILLED','CREATED') default 'CREATED',
+    payment_id text,
 
     delivery_address_street varchar(50),
     delivery_address_city   varchar(40),

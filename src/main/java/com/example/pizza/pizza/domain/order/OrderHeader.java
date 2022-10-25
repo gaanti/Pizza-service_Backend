@@ -22,14 +22,18 @@ public abstract class OrderHeader {
 
 	private float orderCost;
 	private String contactPerson;
+	//from stripe
+	private String paymentId;
 	private String notifyMethod;
 	private String notifyField;
 	private String timeToBeDone;
+	@Column(length = 32, columnDefinition = "ENUM ('FULFILLED','CREATED') default 'CREATED'")
+	@Enumerated(value = EnumType.STRING)
+	private ORDER_STATUS status = ORDER_STATUS.CREATED;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	private Set<OrderedPizza> orderedPizza = new HashSet<>();
 }
-
 
 /*@Entity
 @Getter

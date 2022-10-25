@@ -1,16 +1,23 @@
 package com.example.pizza.payments;
 
 import com.example.pizza.pizza.Repositories.DeliveryOrderRepository;
+import com.example.pizza.pizza.Repositories.OrderRepository;
 import com.example.pizza.pizza.Repositories.PickUpPizzaOrderRepository;
 import com.example.pizza.pizza.Repositories.PizzaRepository;
 import com.example.pizza.pizza.domain.Address;
+import com.example.pizza.pizza.domain.order.ORDER_STATUS;
+import com.example.pizza.pizza.domain.order.OrderHeader;
 import com.example.pizza.pizza.domain.order.OrderedPizza;
 import com.example.pizza.pizza.domain.order.delivery.DeliveryOrder;
 import com.example.pizza.pizza.domain.order.pickUp.PickUpOrder;
-import com.example.pizza.pizza.domain.pizza.Ingredients;
 import com.example.pizza.pizza.domain.pizza.Pizzas;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.stripe.Stripe;
+import com.stripe.model.*;
 import com.stripe.model.checkout.Session;
+import com.stripe.net.ApiResource;
 import com.stripe.param.checkout.SessionCreateParams;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,14 +39,58 @@ public class PaymentsController {
 	@Autowired
 	DeliveryOrderRepository deliveryOrderRepository;
 	@Autowired
+	OrderRepository orderRepository;
+	@Autowired
 	PizzaRepository pizzaRepository;
 
+	/*@RequestMapping("/order-fulfilled")
+	public ResponseEntity<String> odrderFulFilled(@RequestBody Object data) throws Exception {
+		String paymentId = (String) ((Map) data).get("id");
+		String paymentStatus = (String) ((Map) data).get("type");
+		//type -> charge.suc
+		//type -> payment_intent.created
+
+		try {
+			event = ApiResource.GSON.fromJson(payload, Event.class);
+		} catch (JsonSyntaxException e) {
+			// Invalid payload
+			System.out.println("⚠️  Webhook error while parsing basic request.");
+			response.status(400);
+			return "";
+		}
+
+
+		System.out.println("Got payload: " + paymentId);
+		List<OrderHeader> allHeaders = orderRepository.findAll();
+		OrderHeader foundOrderHeader = orderRepository.findByPaymentId(paymentId);
+		foundOrderHeader.setStatus(ORDER_STATUS.FULFILLED);
+		OrderHeader savedOrderHeader = orderRepository.save(foundOrderHeader);
+		System.out.println("Successfully changed order: " + savedOrderHeader.getId() + "\n" + "Current status: " + savedOrderHeader.getStatus());
+		return new ResponseEntity<>(paymentId, HttpStatus.OK);
+	}*/
 	@RequestMapping("/order-fulfilled")
-	public static ResponseEntity<String> odrderFulFilled(@RequestBody Object data) throws Exception {
-		String responseDescription = "Got payload: " + ((Map) data).get("id");
-		System.out.println(responseDescription);
-		return new ResponseEntity<>(responseDescription, HttpStatus.OK);
+	public ResponseEntity<String> odrderFulFilled(@RequestBody String data) throws Exception {
+		Stripe.apiKey = "sk_test_51Luj1gE3rpIhISk0ZfABsQsLQrwic0zUvYJu7dGBzwEdStyqPqeX3uLJw8TIOk9ELCV8HmibLydyCkKgAz422Tsk00prapWWEe";
+		Event event = null;
+		try {
+			event = ApiResource.GSON.fromJson(data, Event.class);
+		} catch (JsonSyntaxException e) {
+			System.out.println("⚠️  Webhook error while parsing basic request.");
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		if (Objects.equals(event.getType(), "checkout.session.completed")) {
+			Event eventWithRightId = Event.retrieve(event.getId());
+			Object JSON_WithRightId = ((eventWithRightId.getDataObjectDeserializer().getRawJson()));
+			String Stringified_JSON_WithRightId = JSON_WithRightId.toString();
+			String RightId = new ObjectMapper().readValue(Stringified_JSON_WithRightId, Map.class).get("id").toString();
+			OrderHeader foundOrderHeader = orderRepository.findByPaymentId(RightId);
+			foundOrderHeader.setStatus(ORDER_STATUS.FULFILLED);
+			OrderHeader savedOrderHeader = orderRepository.save(foundOrderHeader);
+			return new ResponseEntity<>(event.getId(), HttpStatus.OK);
+		}
+		return null;
 	}
+
 
 	public List<SessionCreateParams.LineItem> fillOrderWithItems(OrderPickUpPizza data) {
 		List<SessionCreateParams.LineItem> orderedPizzas = new ArrayList<>();
@@ -101,6 +152,7 @@ public class PaymentsController {
 		deliveryOrder.setOrderCost(session.getAmountTotal());
 		deliveryOrder.setOrderedPizza(Arrays.stream(data.getPizzas()).collect(Collectors.toSet()));
 		deliveryOrder.setAddress(data.getDeliveryAddress());
+		deliveryOrder.setPaymentId(session.getId());
 
 		DeliveryOrder savedOrder = deliveryOrderRepository.save(deliveryOrder);
 		System.out.println("savedPickupOrder = " + savedOrder.toString());
@@ -131,6 +183,7 @@ public class PaymentsController {
 		pickUpOrder.setTimeToBeDone(data.getTimeToBeDone());
 		pickUpOrder.setOrderCost(session.getAmountTotal());
 		pickUpOrder.setOrderedPizza(Arrays.stream(data.getPizzas()).collect(Collectors.toSet()));
+		pickUpOrder.setPaymentId(session.getId());
 
 		PickUpOrder savedOrder = pickUpPizzaOrderRepository.save(pickUpOrder);
 		System.out.println("savedPickupOrder.toString() = " + savedOrder);
