@@ -1,6 +1,6 @@
 package com.example.pizza.pizza.Repositories;
 
-import com.example.pizza.pizza.domain.Pizzas;
+import com.example.pizza.pizza.domain.pizza.Pizzas;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

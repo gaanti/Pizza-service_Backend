@@ -1,56 +1,65 @@
-create table order_header
+/*create table order_header
 (
     id             bigint not null auto_increment,
     creation_time  timestamp,
 
     order_cost     float,
     contact_person varchar(60),
-    contact_method varchar(55),
+    notify_method varchar(55),
+    notify_field varchar(55),
+    time_to_be_done varchar(55),
+    ordered_pizza_id bigint,
+
+    PRIMARY KEY (id),
+    foreign key (ordered_pizza_id) references ordered_pizza (id)
+);*/
+
+create table pick_up_order
+(
+    id             bigint not null auto_increment,
+    creation_time  timestamp,
+
+    order_cost     float,
+    contact_person varchar(60),
+    notify_method varchar(55),
+    notify_field varchar(55),
+    time_to_be_done varchar(55),
+    status ENUM ('FULFILLED','CREATED') default 'CREATED',
+    payment_id text,
 
     PRIMARY KEY (id)
 );
 
-create table order_lines
-(
-    id              bigint not null auto_increment,
-    creation_time   timestamp,
-
-    order_header_id bigint,
-    pizza_id        bigint,
-
-    dough_type      varchar(30),
-    size            int,
-    quantity        int,
-
-    PRIMARY KEY (id),
-    foreign key (pizza_id) references ordered_pizzas (id),
-    foreign key (order_header_id) references order_header (id)
-);
-
-create table pickup_order
-(
-    id              bigint not null auto_increment,
-    creation_time   datetime,
-    order_header_id bigint,
-
-    pickup_time     time,
-
-    primary key (id),
-    foreign key (order_header_id) references order_header (id)
-);
-
 create table delivery_order
 (
-    id                      bigint not null auto_increment,
-    creation_time           datetime,
-    order_header_id         bigint,
+
+    id             bigint not null auto_increment,
+    creation_time  timestamp,
+
+    order_cost     float,
+    contact_person varchar(60),
+    notify_method varchar(55),
+    notify_field varchar(55),
+    time_to_be_done varchar(55),
+    status ENUM ('FULFILLED','CREATED') default 'CREATED',
+    payment_id text,
 
     delivery_address_street varchar(50),
     delivery_address_city   varchar(40),
-    delivery_cost           integer,
-    delivery_time           datetime,
+    delivery_cost   int,
 
-    primary key (id),
-    foreign key (order_header_id) references order_header (id)
-
+    PRIMARY KEY (id)
 );
+
+create table order_header_ordered_pizza
+(
+    order_header_id  bigint not null,
+    ordered_pizza_id bigint not null,
+    primary key (order_header_id, ordered_pizza_id),
+    unique key (`ordered_pizza_id`),
+    foreign key (ordered_pizza_id) references ordered_pizza (id)
+);
+create table hibernate_sequence (
+    next_val bigint
+) engine=InnoDB;
+insert into hibernate_sequence values ( 1 )

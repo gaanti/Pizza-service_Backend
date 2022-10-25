@@ -1,19 +1,13 @@
 package com.example.pizza.pizza.domain;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
-@EqualsAndHashCode
+@Data
+@AllArgsConstructor
 @NoArgsConstructor
 public class Address {
-	String street;
+	private String street;
 	private String city;
-	public Address(String street, String city) {
-		this.street = street;
-		this.city = city;
-	}
 }
