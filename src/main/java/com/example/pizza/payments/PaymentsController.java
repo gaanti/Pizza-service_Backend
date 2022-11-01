@@ -32,6 +32,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/checkout")
 @CrossOrigin(origins = "*", allowedHeaders = "*", allowCredentials = "false")
 public class PaymentsController {
 	@Autowired
@@ -95,7 +96,7 @@ public class PaymentsController {
 		return orderedPizzas;
 	}
 
-	@PostMapping("/checkout-delivery")
+	@PostMapping("/delivery")
 	@CrossOrigin
 	public ResponseEntity<String> checkoutDelivery(@RequestBody OrderDeliveryPizza data, HttpServletRequest request) throws Exception {
 		Stripe.apiKey = "sk_test_51Luj1gE3rpIhISk0ZfABsQsLQrwic0zUvYJu7dGBzwEdStyqPqeX3uLJw8TIOk9ELCV8HmibLydyCkKgAz422Tsk00prapWWEe";
@@ -127,7 +128,7 @@ public class PaymentsController {
 		return ResponseEntity.ok().header("Content-Type", "application/json").body(session.getUrl());
 	}
 
-	@PostMapping("/checkout-pickUp")
+	@PostMapping("/pickUp")
 	@CrossOrigin
 	public ResponseEntity<String> checkoutPickUp(@RequestBody OrderPickUpPizza data, HttpServletRequest request) throws Exception {
 		Stripe.apiKey = "sk_test_51Luj1gE3rpIhISk0ZfABsQsLQrwic0zUvYJu7dGBzwEdStyqPqeX3uLJw8TIOk9ELCV8HmibLydyCkKgAz422Tsk00prapWWEe";
@@ -158,7 +159,7 @@ public class PaymentsController {
 		return ResponseEntity.ok().header("Content-Type", "application/json").body(session.getUrl());
 	}
 
-	@RequestMapping("/order-fulfilled")
+	@RequestMapping("/fulfilled")
 	public ResponseEntity<String> odrderFulFilled(@RequestBody String data) throws Exception {
 		Stripe.apiKey = "sk_test_51Luj1gE3rpIhISk0ZfABsQsLQrwic0zUvYJu7dGBzwEdStyqPqeX3uLJw8TIOk9ELCV8HmibLydyCkKgAz422Tsk00prapWWEe";
 		Event event = null;
