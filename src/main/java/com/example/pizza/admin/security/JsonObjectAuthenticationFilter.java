@@ -17,6 +17,8 @@ public class JsonObjectAuthenticationFilter extends UsernamePasswordAuthenticati
 
 	@Override
 	public Authentication attemptAuthentication(@NotNull HttpServletRequest request, HttpServletResponse response){
+		String someUselessVariable = request.getRequestURI();
+		System.out.println("someUselessVariable = " + someUselessVariable);
 		try{
 			BufferedReader reader = request.getReader();
 			StringBuilder sb = new StringBuilder();

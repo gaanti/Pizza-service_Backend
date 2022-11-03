@@ -13,6 +13,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @Configuration
 public class JwtTotalSecurity {
 	@Autowired
@@ -34,14 +36,17 @@ public class JwtTotalSecurity {
 				.and()
 				.csrf()
 				.disable()
+				.formLogin(withDefaults())
 				.authorizeHttpRequests(auth -> {
 					try {
 						auth
-								.antMatchers("/active-orders").hasRole("ADMIN")
+								.antMatchers("/admin").hasRole("ADMIN")
+								.antMatchers("/user").hasRole("USER")
 								.anyRequest().permitAll()
 								.and()
 								.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 								.and()
+								.formLogin(withDefaults())
 								.addFilter(authenticationFilter())
 								.addFilter(new JsonAuthorizationFilter(authenticationManager, jwtUserDetailsService, secret))
 								.exceptionHandling()
@@ -50,7 +55,7 @@ public class JwtTotalSecurity {
 						throw new RuntimeException(e);
 					}
 				})
-				.httpBasic(Customizer.withDefaults());
+				.httpBasic(withDefaults());
 		return http.build();
 	}
 
