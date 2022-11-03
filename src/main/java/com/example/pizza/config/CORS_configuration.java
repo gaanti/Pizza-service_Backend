@@ -1,4 +1,4 @@
-package com.example.pizza;
+package com.example.pizza.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -12,8 +12,8 @@ public class CORS_configuration implements WebMvcConfigurer {
 		registry.addMapping("/**")
 				.allowedMethods("*")
 //				.allowedOrigins("*")
-				.allowedHeaders("*")
-				.allowCredentials(false);
+				.allowedHeaders("*");
+//				.allowCredentials(false);
 	}
 }
 
