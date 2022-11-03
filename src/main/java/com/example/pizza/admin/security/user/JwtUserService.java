@@ -4,7 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.*;
+import javax.crypto.spec.IvParameterSpec;
 import javax.persistence.EntityNotFoundException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.Optional;
 
 @Service
@@ -25,4 +31,6 @@ public class JwtUserService {
 		return jwtUserRepository.findJwtUserByUserName(userName)
 				.orElseThrow(() -> new EntityNotFoundException("User not found"));
 	}
+
+
 }
