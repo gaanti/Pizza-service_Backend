@@ -19,7 +19,7 @@ public class InitUsers implements CommandLineRunner {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         if (!jwtUserService.findByEmail("admin@test.com").isPresent()) {
             Set<Role> rolesSet = new HashSet<>();
             rolesSet.add(Role.ROLE_USER);

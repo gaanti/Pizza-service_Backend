@@ -31,6 +31,7 @@ public class JwtUser implements UserDetails {
 	private String userName;
 
 	@Column(unique = true)
+	@Convert(converter = JwtUserAttributeConverter.class)
 	private String email;
 
 	@Column
